@@ -33,12 +33,11 @@ app.post('/api/shorturl', function(req, res) {
 
 let url = req.body.url;
 let indexOfUrl = urls.indexOf(url);
-let urlPattern = /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?/gm;
+let urlPattern = /^http:\/\/(w{3}.)[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?/gm
 
 if(urlPattern.test(url) == false) {
 
-res.json({ error: 'invalid url' });
-return;
+return res.json({ error:  'invalid url' });
 
 }
 
@@ -64,13 +63,37 @@ else {
   })
 }
 
-
-
 });
 
 
+app.get("/api/shorturl/:short_url", (req, res) => {
+
+  let shortUrl = parseInt(req.params.short_url);
+  let foundIndex = shortUrls.indexOf(shortUrl);
+
+  if(foundIndex < 0) {
+  return res.json({ "error": "No short URL found for the given input"
+
+  })
+
+  }
+  
+  res.redirect(urls[foundIndex])
+
+})
 
 
+
+
+
+
+
+
+
+
+
+
+  
 
 
 
