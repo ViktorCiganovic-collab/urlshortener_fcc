@@ -1,0 +1,82 @@
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const dns = require('dns');
+var mongo = require('mongodb');
+var mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+app.use(cors());
+app.use(bodyParser.urlencoded({extended: true}));
+
+// Basic Configuration 
+var port = process.env.PORT || 3000;
+
+app.use('/public', express.static(`${process.cwd()}/public`));
+
+app.get('/', function(req, res) {
+  res.sendFile(process.cwd() + '/views/index.html');
+});
+
+app.listen(port, function () {
+  console.log('Node.js listening ...');
+});
+
+/** this project needs a db !! **/ 
+mongoose.connect('mongodb+srv://Viktor:kalistenix@cluster0.gsyrdkb.mongodb.net/<urls>?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true });
+
+let urls = [];
+let shortUrls = [];
+
+// Your first API endpoint
+app.post('/api/shorturl', function(req, res) {
+
+let url = req.body.url;
+let indexOfUrl = urls.indexOf(url);
+let urlPattern = /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?/gm;
+
+if(urlPattern.test(url) == false) {
+
+res.json({ error: 'invalid url' });
+return;
+
+}
+
+if(indexOfUrl < 0) {
+
+  urls.push(url);
+  shortUrls.push(shortUrls.length);
+
+  return res.json({
+  original_url: url,
+  short_url: shortUrls.length - 1
+  })
+}
+
+else {
+
+  urls.push(url);
+  shortUrls.push(indexOfUrl);
+
+  return res.json({
+  original_url: url,
+  short_url: shortUrls[indexOfUrl]
+  })
+}
+
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+  
