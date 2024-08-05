@@ -22,9 +22,6 @@ app.listen(port, function () {
   console.log('Node.js listening ...');
 });
 
-/** this project needs a db !! **/ 
-mongoose.connect('mongodb+srv://Viktor:kalistenix@cluster0.gsyrdkb.mongodb.net/<urls>?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true });
-
 let originalUrls = [];
 let shortUrls = [];
 
